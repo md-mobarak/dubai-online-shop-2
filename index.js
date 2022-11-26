@@ -38,6 +38,7 @@ async function run() {
         await client.connect();
         const productCollection = client.db('Dubai_shop').collection('product')
         const usersCollection = client.db('Dubai_shop').collection('users')
+        const commentCollection = client.db('Dubai_shop').collection('comment')
 
 
         app.get('/product', async (req, res) => {
@@ -151,6 +152,21 @@ async function run() {
             const { id } = req.params
             const filter = { _id: ObjectId(id) }
             const result = await productCollection.findOne(filter)
+            res.send(result)
+        })
+        app.post('/comment', async (req, res) => {
+            const comment = await commentCollection.insertOne(req.body)
+            res.send(comment)
+        })
+
+        app.get('/comment', async (req, res) => {
+            const result = await commentCollection.find().toArray()
+            res.send(result)
+        })
+        app.delete('/comment/:id', async (req, res) => {
+            const { id } = req.params
+            const filter = { _id: ObjectId(id) }
+            const result = await commentCollection.deleteOne(filter)
             res.send(result)
         })
 
